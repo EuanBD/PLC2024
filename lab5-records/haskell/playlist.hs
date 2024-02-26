@@ -1,6 +1,7 @@
 module Main where
 
 import Text.Printf
+import Data.List (sort)
 
 -- start of code to focus on in Practical 4
 
@@ -22,7 +23,17 @@ data Item
             item_performer :: Person,
             item_length_secs :: Float
         }
+    | Pause
+        {
+            pause_length_secs :: Float
+        }
     deriving (Eq)
+
+instance Show Item where
+    show (Piece name performer len) =
+        printf "%s by %s (%.1fs)" name (show performer) len
+    show (Pause len) =
+        printf "Pause (%.1fs)" len
 
 instance (Show Item) where
     show (Piece name performer len) =
@@ -44,28 +55,29 @@ piece2 =
         item_length_secs = 16*60+49
     }
   
-{-
+{
 pause1 =
     Pause
     { 
         item_length_secs = 5
     }
--}
+}
 
-main =
-    do
-    -- putStrLn "piece1 and piece2 sorted by length:"
-    -- putStrLn $ show shorterPiece
-    -- putStrLn $ show longerPiece
-    putStr "piece1 = "
-    putStrLn $ show piece1
---    putStr "pause1 = "
---    putStrLn $ show pause1
-
--- ... = sortTwoItems (piece1, piece2) -- TASK
-
-sortTwoItems (item1, item2) = 
+-- Definition of sortTwoItems function
+sortTwoItems :: (Item, Item) -> (Item, Item)
+sortTwoItems (item1, item2) =
     if item_length_secs item1 <= item_length_secs item2
         then (item1, item2)
         else (item2, item1)
 
+main =
+    do
+    putStrLn "piece1 and piece2 sorted by length:"
+    putStrLn $ show shorterPiece
+    putStrLn $ show longerPiece
+    putStr "piece1 = "
+    putStrLn $ show piece1
+    putStr "pause1 = "
+    putStrLn $ show pause1
+
+(shorterPiece, longerPiece) = sortTwoItems (piece1, piece2) -- TASK
